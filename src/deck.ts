@@ -1,6 +1,6 @@
 const suits = ['♠', '♣', '♥', '♦']
 const values = [
-  'A',
+  'ace',
   '2',
   '3',
   '4',
@@ -10,13 +10,13 @@ const values = [
   '8',
   '9',
   '10',
-  'J',
-  'Q',
-  'K'
+  'jack',
+  'queen',
+  'king'
 ]
 
 export default class Deck {
-  cards: Array<object>
+  cards: Array<{suit: string, value: string}>
 
   constructor (cards = freshDeck()) {
     this.cards = cards
@@ -26,12 +26,15 @@ export default class Deck {
     return this.cards.length
   }
 
-  pop () {
-    return this.cards.shift()
+  seeFirstCard () {
+    const card = this.cards[0]
+    return { suit: card.suit, value: card.value }
   }
 
-  push (card) {
-    this.cards.push(card)
+  newCard () {
+    this.cards.shift()
+    const card = this.seeFirstCard()
+    return { suit: card.suit, value: card.value }
   }
 
   shuffle () {
