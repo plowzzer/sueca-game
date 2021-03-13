@@ -1,6 +1,6 @@
 const suits = ['♠', '♣', '♥', '♦']
 const values = [
-  'ace',
+  'A',
   '2',
   '3',
   '4',
@@ -10,13 +10,13 @@ const values = [
   '8',
   '9',
   '10',
-  'jack',
-  'queen',
-  'king'
+  'J',
+  'Q',
+  'K'
 ]
 
 export default class Deck {
-  cards: Array<{suit: string, value: string}>
+  cards: Array<{suit: string, value: string, color: string}>
 
   constructor (cards = freshDeck()) {
     this.cards = cards
@@ -28,13 +28,13 @@ export default class Deck {
 
   seeFirstCard () {
     const card = this.cards[0]
-    return { suit: card.suit, value: card.value }
+    return { suit: card.suit, value: card.value, color: card.color }
   }
 
   newCard () {
     this.cards.shift()
     const card = this.seeFirstCard()
-    return { suit: card.suit, value: card.value }
+    return { suit: card.suit, value: card.value, color: card.color }
   }
 
   shuffle () {
@@ -48,8 +48,8 @@ export default class Deck {
 }
 
 class Card {
-  suit:string
-  value:string
+  suit: string
+  value: string
 
   constructor (suit, value) {
     this.suit = suit

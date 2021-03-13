@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Sueca Game</title>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>The Sueca Game</h1>
+    <div id="playersCount"></div>
+    <button id="newGame">Novo jogo</button>
+  </header>
+  <div class="content">
+    <div id="deck">
+      <div id="card"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var socket = io('http://localhost:3333')
+
+    function renderCard(suit, value, color) {
+      $('.card-intern').remove()
+      $('#card').append(`
+        <div class="card-intern ${color}">
+          <div class="top">
+            <span>${value}</span><strong>${suit}</strong>
+          </div>
+          <div class="bottom">
+            <span>${value}</span><strong>${suit}</strong>
+          </div>
+        </div>
+      `)
+    }
+
+    socket.on('newCardReturn', function (card) {
+      console.log('suit  '+ card.suit + ' value ' + card.value + ' color ' + card.color)
+      renderCard(card.suit, card.value, card.color)
+    })
+
+    $('#newGame').click(function () {
+      console.log('asking for a new game')
+      socket.emit('newGame')
+    })
+
+    $('#card').click(function () {
+      console.log('tryng to get a new card')
+      socket.emit('newCard')
+    })
+  </script>
+</body>
+</html>

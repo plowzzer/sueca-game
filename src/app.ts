@@ -14,6 +14,11 @@ let deck
 app.use(express.static('public'))
 app.set('views', path.join(__dirname, 'public'))
 app.engine('html', ejs.renderFile)
+app.set('view engine', 'html')
+
+app.use('/', (req, res) => {
+  res.render('index.html')
+})
 
 const io = new Server(httpServer, {
   cors: {
@@ -25,9 +30,9 @@ io.on('connection', (socket: Socket) => {
   // A new user connected or reconnected
   console.log(`[server] new user connected (${socket.id})`)
   if (deck) {
-    const foldedCard = seeFirstCard(deck)
+    const card = seeFirstCard(deck)
     socket.emit('newCardReturn', {
-      suit: foldedCard.suit, value: foldedCard.value
+      suit: card.suit, value: card.value, color: card.color
     })
   }
 
@@ -39,7 +44,7 @@ io.on('connection', (socket: Socket) => {
     deck = startGame()
     const card = seeFirstCard(deck)
     io.emit('newCardReturn', {
-      suit: card.suit, value: card.value
+      suit: card.suit, value: card.value, color: card.color
     })
   })
 
@@ -48,10 +53,10 @@ io.on('connection', (socket: Socket) => {
       removeTopCard(deck)
       const card = seeFirstCard(deck)
       io.emit('newCardReturn', {
-        suit: card.suit, value: card.value
+        suit: card.suit, value: card.value, color: card.color
       })
-      io.emit('checkCardsLeft', () => {
-        return cardCount(deck)
+      io.emit('checkCardsLeft', {
+        cardCount(deck)
       })
     } else {
       io.emit('endGame')
