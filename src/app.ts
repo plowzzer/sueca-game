@@ -1,4 +1,6 @@
 import express from 'express'
+import path from 'path'
+import ejs from 'ejs'
 import { createServer } from 'http'
 import { Server, Socket } from 'socket.io'
 
@@ -8,6 +10,10 @@ const port = process.env.PORT || 3333
 const app = express()
 const httpServer = createServer(app)
 let deck
+
+app.use(express.static('public'))
+app.set('views', path.join(__dirname, 'public'))
+app.engine('html', ejs.renderFile)
 
 const io = new Server(httpServer, {
   cors: {
